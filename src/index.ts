@@ -23,7 +23,7 @@ export default {
           statusText: response.statusText,
           headers: response.headers
         });
-        response.headers.append('Set-Cookie', 'affiliation=student; Max-Age=31536000; Path=/; Domain=.worldcampus.psu.edu; HttpOnly');
+        response.headers.append('Set-Cookie', 'affiliation=student; Max-Age=31536000; Path=/; Domain=.worldcampus.psu.edu; HttpOnly; Secure; SameSite=Lax');
         response.headers.set('X-Affiliation', 'student');
       }
     }
