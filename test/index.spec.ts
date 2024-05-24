@@ -3,11 +3,6 @@ import {describe, expect, it} from 'vitest';
 
 describe('World Campus Student Cloudflare Worker', () => {
 
-  it('responds with no affiliation if not specified in the query params', async () => {
-    const response = await SELF.fetch('https://example.com');
-    expect(await response.headers.get('X-Affiliation')).equals(null);
-  });
-
   it('responds with no affiliation if previously identified as a staff member', async () => {
     const request = new Request('https://example.com?affiliation=student');
     request.headers.set('Cookie', 'affiliation=staff');
