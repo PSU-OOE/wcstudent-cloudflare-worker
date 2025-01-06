@@ -8,7 +8,7 @@ export default {
     const cookieString = request.headers.get('Cookie') ?? '';
     const cookies = cookieString.split(';');
     for (const cookie of cookies) {
-      if (cookie === 'affiliation=staff' || cookie === 'affiliation=faculty') {
+      if (cookie === 'acquia_a=staff' || cookie === 'acquia_a=faculty') {
         faculty_or_staff = true;
         break;
       }
@@ -21,7 +21,7 @@ export default {
         statusText: response.statusText,
         headers: response.headers
       });
-      response.headers.append('Set-Cookie', 'affiliation=student; Max-Age=31536000; Path=/; Domain=.' + new URL(request.url).hostname + '; HttpOnly');
+      response.headers.append('Set-Cookie', 'acquia_a=student; Max-Age=31536000; Path=/; Domain=.' + new URL(request.url).hostname + '; HttpOnly');
       response.headers.set('X-Affiliation', 'student');
     }
 
