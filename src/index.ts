@@ -2,14 +2,12 @@ export default {
 
   async fetch(request: Request): Promise<Response> {
 
-    // Please work!
-    
     // Multiple affiliations are packed into a single cookie because there are
     // a finite number of cookies that can be used to segment and personalize
     // the user journey on the Acquia platform.
     //
     // See https://docs.acquia.com/acquia-cloud-platform/performance/varnish/cookies
-	  const STUDENT_AFFILIATION_MASK = 0x1;
+    const STUDENT_AFFILIATION_MASK = 0x1;
     // const STAFF_AFFILIATION_MASK = 0x2;
     // const MILITARY_AFFILIATION_MASK = 0x4;
 
