@@ -18,7 +18,7 @@ We strive to stay "in the green" with web vitals in order to reap the SEO benefi
 ## What's the path forward?
 Given the preconditions, the chosen solution was to utilize Cloudflare Workers to provide a mechanism that allows us to set long-lived cookies for anonymous users without sacrificing the performance that we've worked so hard to achieve.
 
-## Cloudflare Worker Logic
+### Cloudflare Worker Logic
 This worker acts as a cookie setter, and redirection service. It listens to requests coming in on https://\*student.worldcampus.psu.edu/affiliation/student\* and will run the following logic:
 
 1. Read the visitor's current affiliations.
@@ -27,5 +27,5 @@ This worker acts as a cookie setter, and redirection service. It listens to requ
 4. Send a _HTTP/302_ response with an appropriate `Set-Cookie` and `Location` header based on #2 and #3. 
 5. If anything at all goes wrong, send a _HTTP/400_ response.
 
-## Cloudflare Worker Usage
+### Cloudflare Worker Usage
 This worker is intended to respond to specially crafted links that staff will place within email correspondence to known students from the University. Upon clicking such a link, the student will be seamlessly redirected to the intended destination with first-party affiliation cookie data securely installed.
