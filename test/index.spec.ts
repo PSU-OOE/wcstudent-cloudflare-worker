@@ -6,28 +6,28 @@ describe('World Campus Student Cloudflare Worker', () => {
   it('adds the student affiliation if the user is unaffiliated', async () => {
     const request = new Request('https://example.com');
     const response = await SELF.fetch(request, { redirect: 'manual' });
-    expect(await response.headers.get('X-Affiliations')).equals('1');
+    expect(await response.headers.get('X-Affiliations')).equals('Student');
   });
 
   it('adds the student affiliation to existing staff affiliation', async () => {
     const request = new Request('https://example.com');
-    request.headers.set('Cookie', 'acquia_a=2');
+    request.headers.set('Cookie', 'acquia_a=Staff');
     const response = await SELF.fetch(request, { redirect: 'manual' });
-    expect(await response.headers.get('X-Affiliations')).equals('3');
+    expect(await response.headers.get('X-Affiliations')).equals('Staff,Student');
   });
 
   it('adds the student affiliation to existing military affiliation', async () => {
     const request = new Request('https://example.com');
-    request.headers.set('Cookie', 'acquia_a=4');
+    request.headers.set('Cookie', 'acquia_a=Military');
     const response = await SELF.fetch(request, { redirect: 'manual' });
-    expect(await response.headers.get('X-Affiliations')).equals('5');
+    expect(await response.headers.get('X-Affiliations')).equals('Military,Student');
   });
 
   it('adds the student affiliation to existing staff + military affiliations', async () => {
     const request = new Request('https://example.com');
-    request.headers.set('Cookie', 'acquia_a=6');
+    request.headers.set('Cookie', 'acquia_a=Military,Staff');
     const response = await SELF.fetch(request, { redirect: 'manual' });
-    expect(await response.headers.get('X-Affiliations')).equals('7');
+    expect(await response.headers.get('X-Affiliations')).equals('Military,Staff,Student');
   });
 
   it('redirects to the homepage if no destination is provided', async () => {
