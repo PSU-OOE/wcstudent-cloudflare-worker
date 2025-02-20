@@ -42,4 +42,28 @@ describe('World Campus Student Cloudflare Worker', () => {
     expect(await response.headers.get('Location')).equals('https://example.com/custom-url');
   });
 
+  it('properly strips leading and trailing slashes', async () => {
+    const request = new Request('https://example.com?destination=///custom-url/with/a/subpath///?test=uhoh%23fragment!');
+    const response = await SELF.fetch(request, { redirect: 'manual' });
+    expect(await response.headers.get('Location')).equals('https://example.com/custom-url/with/a/subpath?test=uhoh#fragment!');
+  });
+
+  it('properly strips repeated slashes inside a path', async () => {
+    const request = new Request('https://example.com?destination=///custom-url////with/a/subpath///?test=uhoh%23fragment!');
+    const response = await SELF.fetch(request, { redirect: 'manual' });
+    expect(await response.headers.get('Location')).equals('https://example.com/custom-url/with/a/subpath?test=uhoh#fragment!');
+  });
+
+  it('should not allow allow open redirect vulnerabilities', async () => {
+    const request = new Request('https://example.com?destination=https%3A%2F%2Fexample.ru');
+    const response = await SELF.fetch(request, { redirect: 'manual' });
+    expect(await response.status).equals(400);
+  });
+
+  it('should not allow javascript protocols in redirect destinations', async () => {
+    const request = new Request('https://example.com?destination=javascript%3Aalert%28%27XSS%21%27%29');
+    const response = await SELF.fetch(request, { redirect: 'manual' });
+    expect(await response.status).equals(400);
+  });
+
 });

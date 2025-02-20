@@ -31,18 +31,43 @@ export default {
     // Extract several parts of the original request...
     const { origin, search } = new URL(request.url);
 
-    // Redirect to the proper location while setting a long-lived affiliation
-    // cookie. The cookie is set on the .worldcampus.psu.edu domain for ~13
-    // months -- the practical maximum age that cookies can live for. If no
-    // destination query parameter was provided, redirect the user to the
-    // origin homepage.
-    return new Response(null, {
-      status: 302,
-      headers: {
-        'Location': origin + '/' + ((new URLSearchParams(search)).get('destination') ?? '/').trim('/'),
-        'Set-Cookie': 'acquia_a=' + affiliations.join(',') + '; Max-Age=34560000; Path=/; Domain=.worldcampus.psu.edu; Secure',
-        'X-Affiliations': affiliations.join(','),
+    try {
+      // Pull the redirect destination out of the query parameter.
+      // If no destination query parameter was provided, redirect the user to the
+      // origin homepage.
+      const destination = new URL(origin + (new URLSearchParams(search).get('destination') ?? ''));
+
+      // Deny attempts at creating an open-redirect.
+      if (destination.origin !== origin) {
+        return new Response(null, {
+          status: 400,
+        });
       }
-    });
+
+      // Prevent consecutive '/' characters.
+      destination.pathname = destination.pathname.replace(/\/+/g, '/');
+
+      // Prevent leading and trailing '/' characters.
+      destination.pathname = destination.pathname.replace(/(^\/*)|(\/*$)/g, '');
+
+      // Redirect to the proper location while setting a long-lived affiliation
+      // cookie. The cookie is set on the .worldcampus.psu.edu domain for ~13
+      // months -- the practical maximum age that cookies can live for.
+      return new Response(null, {
+        status: 302,
+        headers: {
+          'Location': destination.toString(),
+          'Set-Cookie': 'acquia_a=' + affiliations.join(',') + '; Max-Age=34560000; Path=/; Domain=.worldcampus.psu.edu; Secure',
+          'X-Affiliations': affiliations.join(','),
+        }
+      });
+    }
+    catch (e) {
+
+      // Respond gracefully for any other bad requests.
+      return new Response(null, {
+        status: 400,
+      });
+    }
   },
 };
