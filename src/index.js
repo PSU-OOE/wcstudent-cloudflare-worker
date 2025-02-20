@@ -40,7 +40,7 @@ export default {
       status: 302,
       headers: {
         'Location': origin + ((new URLSearchParams(search)).get('destination') ?? '/'),
-        'Set-Cookie': 'acquia_a=' + affiliations.join(',') + '; Max-Age=34560000; Path=/; Domain=.test-worldcampus.psu.edu; Secure',
+        'Set-Cookie': 'acquia_a=' + affiliations.join(',') + '; Max-Age=34560000; Path=/; Domain=.worldcampus.psu.edu; Secure',
         'X-Affiliations': affiliations.join(','),
       }
     });
